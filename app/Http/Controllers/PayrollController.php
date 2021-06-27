@@ -110,15 +110,16 @@ class PayrollController extends Controller
                 $final = [
                     'employee_id' => $value->id,
                     'periode' => $periode,
-                    'total_basic_salary' => $value->salary,
-                    'total_allowance' => $value->allowance,
-                    'total_overtime' => $lembur,
-                    'total_bpjs' => $bpjs,
-                    'total_nwnp' => $group_nwmp,
-                    'total_accepted' => $value->salary + $value->allowance + $lembur - $group_nwmp - $bpjs
                 ];
 
-                Payroll::create($final);
+                $pay = Payroll::firstOrNew($final);
+                $pay->total_basic_salary = $value->salary;
+                $pay->total_allowance = $value->allowance;
+                $pay->total_overtime = $lembur;
+                $pay->total_bpjs = $bpjs;
+                $pay->total_nwnp = $group_nwmp;
+                $pay->total_accepted = $value->salary + $value->allowance + $lembur - $group_nwmp - $bpjs;
+                $pay->save();
             }
         }elseif($tab === 'verifikasi'){
             $data = Payroll::find($request->id);

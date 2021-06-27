@@ -73,14 +73,15 @@ class AttendanceController extends Controller
         for($int_day_start; $int_day_start<= $int_day_end; $int_day_start++){
             $date_week = $date_mounth.'-'. $int_day_start;
             if(date('N', strtotime($date_week)) < 6){
-                Attendance::create([
+                $pegawai = Attendance::firstOrNew([
                     'employee_id' => $request->employee_id,
-                    'date' => $date_mounth.'-'. $int_day_start,
-                    'time_in' => $request->time_in,
-                    'time_out' => $request->time_out,
-                    'flag_attendance' => 1,
-                    'description' => 'Hadir'
+                    'date' => $date_mounth.'-'. $int_day_start
                 ]);
+                $pegawai->time_in = $request->time_in;
+                $pegawai->time_out = $request->time_out;
+                $pegawai->flag_attendance = 1;
+                $pegawai->description = 'Hadir';
+                $pegawai->save();
             }
         }
     }
